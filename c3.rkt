@@ -18,9 +18,10 @@
 ;; here 'line' is a parameterized function.
 
 
-;; step-1: provide a x -> receive a function A (<what is the name of this function ?>)
+;; step-1: provide a x -> receive a function A (aka objective function)
 ;; step-2: evaluate A(theta): get the output 
 ;;
+;; functions that receive theta as input are called as objective functions. called so,may be because their objective is to produce well fitting final output 
 
 ;; identifying the values of parameters from input data is called as 'learning'
 
