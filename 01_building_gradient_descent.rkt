@@ -1,7 +1,6 @@
-;; TEXT section
-;; functions in the text
-;; present *exactly* as they appear in the text.
-;; nothing more, nothing less
+;; This covers up to chapter-4
+;; of the book "The Little Learner"
+;; by Daniel P.Friedman and Anurag Mendhekar
 
 #lang racket
 
@@ -21,7 +20,10 @@
 ;; step-1: provide a x -> receive a function A (aka objective function)
 ;; step-2: evaluate A(theta): get the output 
 ;;
-;; functions that receive theta as input are called as objective functions. called so,may be because their objective is to produce well fitting final output 
+;; functions that receive theta as input are called as objective functions.
+;; their output is loss (scalar).
+;; called so,may be because their objective is to produce well fitting final output,
+;; by making loss as close to zero as possible
 
 ;; identifying the values of parameters from input data is called as 'learning'
 
@@ -84,13 +86,24 @@
 
 (define theta (list 0.0 0.0))
 
+;; this function accepts the parameters (theta) as input
+;; and outputs the predicted y's
+
 (define obj-fn
   ((l2-loss line) line-xs line-ys))
+
+;; revise theta , 'revs' number of times.
+;; f is the function that provides next theta value, based on the
+;; current value of theta
+;; revs is the number of revisions to be made
 
 (define (revise f revs theta)
   (cond
    ((zero? revs) theta)
    (else (revise f (sub1 revs) (f theta)))))
+
+;; output of below function is given as
+;; input (f) for the revise function.	
 
 (define (next-theta obj-fn learning-rate)
   (lambda (theta)
@@ -103,6 +116,11 @@
 
 
 ;; as per book - version 1
+;; alpha - learning rate
+;; notice that gradients are computed for each value of theta.
+;; theta is revised by a small value that is proportional to the gradient.
+
+
 (let ((alpha 0.01)
       (obj ((l2-loss line) line-xs line-ys)))
   (let ((f (lambda (theta)
@@ -116,6 +134,8 @@
 (revise (next-theta obj-fn 0.01) 10000 (list 0 0))
 
 ;; as per book - version 2
+;; only change, compared to earlier version, is that the parameters are now
+;; revised using a map function.
 
 (let ((alpha 0.01)
       (obj ((l2-loss line) line-xs line-ys)))
@@ -127,20 +147,6 @@
 		theta
 		gs)))))
     (revise f 10000 (list 0.0 0.0))))
-
-;; as per book - version 3
-
-
-(let ((obj ((l2-loss line) line-xs line-ys)))
-  (let ((f (lambda (theta)
-	     (let ((gs (gradient-of obj theta)))
-	       (map
-		(lambda (p g)
-		  (- p (* alpha g)))
-		theta
-		gs)))))
-    (revise f revs (list 0.0 0.0))))
-
 
 ;; gradient descent - version 1
 
@@ -157,13 +163,4 @@
 		  big-theta
 		  gs)))))
       (revise f revs theta))))
-
-
-
-
-    
-
-
-
-
 
